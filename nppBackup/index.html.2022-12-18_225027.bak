@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    
+        <title>Rivista</title>
+        
+        <!--disable zoom -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+        <link rel="manifest" href="site.webmanifest">
+        
+        <link rel="stylesheet" href="main.css">
+        <style>
+        
+            html {
+                
+                /**touch-action: none;**/
+            }
+            
+            canvas {
+                
+                /**touch-action: none;**/
+                
+            }
+
+            body {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+                background-image: url("./images/background-sample-delete-and-replace.jpg");
+                background-repeat: repeat-y repeat-x;
+                background-size: 300px 300px;
+                overflow: hidden;
+            /**color: white;**/
+           /** touch-action: none;**/
+            }
+
+            .tool_preview{ 
+            
+            transform:translate(-50%,-50%);
+            height:5px;
+            width:5px;
+            border-radius:50%;
+            border:1px solid rgba(29, 29, 29, 0.3);
+            position:absolute;
+            pointer-events: none;
+
+            }
+        </style>
+
+        
+    </head>
+
+    <body oncontextmenu="return false;">
+	
+	
+
+
+<button id='add_canvas'>Add Canvas</button>
+<button id ='add_text'>Add Text</button>
+<button id ='add_circle'>Add Circle</button>
+<button id ='black_pen'>Black Pen</button>
+<button id ='red_pen'>Red Pen</button>
+
+<span id="size">5px</span>
+<input type="range" value="5" min="2" max="150" id="line-width">
+
+<div id="content"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+<script src="js/main.js"></script>
+	
+    </body>
+</html>
+	
+	

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Rivista</title>
+
+    <!--disable zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        html {
+
+            /**touch-action: none;**/
+        }
+
+        canvas {
+
+            /**touch-action: none;**/
+
+        }
+
+        body {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            width: 100%;
+            background-image: url("./images/background-sample-delete-and-replace.jpg");
+            background-repeat: repeat-y repeat-x;
+            background-size: 300px 300px;
+            overflow: scroll;
+            /**color: white;**/
+            /** touch-action: none;**/
+        }
+
+        .tool_preview {
+
+            transform: translate(-50%, -50%);
+            height: 5px;
+            width: 5px;
+            border-radius: 50%;
+            border: 1px solid rgba(29, 29, 29, 0.3);
+            position: absolute;
+            pointer-events: none;
+
+        }
+    </style>
+
+
+</head>
+
+<body oncontextmenu="return false;">
+
+
+
+
+
+    <!--  <button id ='add_text'>Add Text</button>
+<button id ='add_circle'>Add Circle</button>
+<button id ='black_pen'>Black Pen</button>
+<button id ='red_pen'>Red Pen</button>-->
+
+<button id='add_canvas' type="button" value="" class="btn add_page_icon"></button>
+
+    
+    <a onclick="savePage2SVG();"><button id="save-btn" type="button" value="" class="btn"><i class="fa fa-save"></i></button></a>
+    <!--<span id="size">5px</span>
+
+        
+<input id="line-width" type="range" value="5" min="2" max="150">-->
+
+    <div id="tool-tray" class="shadow-1">
+
+        
+
+        <input id="brush_size" type="range" min="1" max="100" class="slider">
+
+        <button id="brush-btn" type="button" value="" class="pen_icon btn">
+            <!--<i class="fa fa-paint-brush"></i>-->
+        </button>
+
+        <input id="brush_opacity" type="range" min="1" max="100" class="slider">
+
+        <button id="undo-btn" type="button" value="" class="btn"><i class="fa fa-undo"></i></button>
+
+        <button id="redo-btn" type="button" value="" class="btn"><i class="fa fa-repeat"></i></button>
+
+    </div>
+
+    <div id="sub-tool-tray" class="">
+
+        <div id="brush-size-preview" class="preview_window shadow-1">
+
+            <H3 class="preview_value_title"><span class="bold_text">SIZE:</span> <span id="tool_size_preview_value" class="light_text">100%</span></H3>
+            <img id="brush_size_preview_img" src="brushes/brush1.png" class="brush_preview" />
+
+        </div>
+
+        <div id="brush-fav-menu" class="shadow-1">
+
+            <button type="button" data="crayon" class="pen_button pencil_icon"></button>
+
+            <button type="button" data="pen" class="pen_button pen_icon"></button>
+
+            <button type="button" data="marker" class="pen_button marker_icon"></button>
+
+            <button type="button" data="airbrush" class="pen_button airbrush_icon"></button>
+
+            <button type="button" data="eraser" class="pen_button eraser_icon"></button>
+
+        </div>
+
+        <div id="brush-opacity-preview" class="preview_window shadow-1">
+
+            <H3 class="preview_value_title"><span class="bold_text">OPACITY:</span> <span id="tool_opacity_preview_value" class="light_text">100%</span></H3>
+            <img id="brush_opacity_preview_img" src="brushes/brush1.png" class="brush_preview" />
+
+        </div>
+
+    </div>
+
+    <div id="color-menu">
+        <button id="colour-preview-btn"></button>
+        <div id="color-picker-tray" class="shadow-2">
+            <h3>Colours</h3>
+            <color-disc id="procreate-color-disk" size="300" format="hex" style="picker"></color-disc>
+            <div id="color-swatches">
+                <!-- swatches go here -->
+            </div>
+        </div>
+    </div>
+
+
+
+    <center>
+        <div id="content"></div>
+    </center>
+
+
+    <textarea id="console" readonly>
+        </textarea>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script> <!-- was 3.6.2 -->
+
+    <script>
+        document.addEventListener('touchmove', function(e) {
+
+            //console.log("scroll attempt made");
+
+
+
+        });
+
+
+        //monkeypatch logger to also print to site console
+
+        // Save the original console.log() method
+        var log = console.log;
+        var log_count = 0;
+        console.log = function() {
+
+            // Invoke the original method with an additional parameter
+            log.apply(console, arguments);
+
+            for (i = 0; i < arguments.length; i++) {
+
+                $('#console').append("\n" + log_count + ")     " + arguments[i]);
+                $('#console').scrollTop($('#console')[0].scrollHeight);
+
+                log_count += 1;
+
+            }
+
+        };
+    </script>
+
+    <!--<script src="js/fabric.5.2.0.min.js"></script> <!-- most recent fabricjs does not work with psbrush -->
+    <script src="js/fabric.4.5.0.min.js"></script> <!-- most recent fabricjs does not work with psbrush -->
+    <script src="js/fabric.brushes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@arch-inc/fabricjs-psbrush@latest/dist/index.js"></script>
+    <script src="js/color-disc.js"></script> <!-- procreate style colour picker -->
+    <script src="js/neural.js"></script> <!-- library that given a colour returns if a dark or light colour should overlay it, this library needs a simpler method to replace it -->
+    <script src="js/copic.colors.js"></script>
+    <script src="js/main.js"></script>
+
+
+
+</body>
+
+</html>
